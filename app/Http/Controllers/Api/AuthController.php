@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseController
 {
-    public function signup(Request $request) 
+    public function signup(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -22,18 +22,21 @@ class AuthController extends BaseController
 
         if($validator->fails())
         {
-            
+
             return $this->sendError('Validation Error', $validator->errors());
         }
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
-        
+
+
         $success = [
             'token' => $user->createToken('DigiMarket')->accessToken,
             'name' => $user->name,
         ];
+
+        event(new Registered($user)); // Trigger email verification
 
         return $this->sendResponse($success, 'User registered successfully');
     }
@@ -52,5 +55,11 @@ class AuthController extends BaseController
         } else {
             return $this->sendError('Unauthorised', ['error' => 'Unauthorised'], 401);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+        return response()->json(['message' => 'Successfully logged out']);
     }
 }
