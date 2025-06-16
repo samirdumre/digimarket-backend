@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,7 +33,11 @@ Route::get('/auth/verify-email/{id}/{hash}', function ($id, $hash, Request $requ
         $user->markEmailAsVerified();
     }
 
-    return response()->json(['message' => 'Email verified successfully!']);
+//    return response()->json(['message' => 'Email verified successfully!']);
+
+    // Redirect to frontend
+    return redirect('http://localhost:3000/products/?email_verified=true');
+
 })->middleware('signed')->name('verification.verify');
 
 Route::post('/auth/resend-verification', function (Request $request){
@@ -55,5 +60,6 @@ Route::middleware('auth:api', 'verified')->group(function () {
     Route::prefix('/v1')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::apiResource('books', BookController::class);
+        Route::apiResource('products', ProductController::class);
     });
 });

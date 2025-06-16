@@ -22,7 +22,8 @@ class User extends Authenticatable implements OAuthenticatable, MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'password'
+        'password',
+        'role'
     ];
 
     /**
