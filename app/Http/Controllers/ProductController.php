@@ -13,7 +13,7 @@ class ProductController extends BaseController
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('category')->get();
         return $this->sendResponse(ProductResource::collection($products), 'Products retrived successfully');
     }
 
@@ -27,6 +27,11 @@ class ProductController extends BaseController
             'short_description' => ['required'],
             'price' => ['required', 'numeric'],
             'status' => ['required', Rule::in(['draft', 'pending', 'approved', 'rejected', 'inactive'])],
+            'thumbnail' => ['required', 'url'],
+            'quantity' => ['numeric'],
+            'images' => ['required', 'array'], // Validates the images is an array
+            'images.*' => ['string', 'url'], // Validates each item in the array is a url
+            'category_id' => ['required', 'exists:categories,id']
         ]);
 
         if($validator->fails()){
@@ -35,7 +40,7 @@ class ProductController extends BaseController
 
         $dataToCreate = array_merge([
             'download_count' => 0,
-        ], $input);
+        ], $validator->validated());
 
         $product = Product::create($dataToCreate);
 
@@ -51,11 +56,16 @@ class ProductController extends BaseController
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
-            'title' => ['required'],
-            'description' => ['required'],
-            'short_description' => ['required'],
-            'price' => ['required', 'numeric'],
-            'status' => ['sometimes', 'required', Rule::in(['draft', 'pending', 'approved', 'rejected', 'inactive'])]
+            'title' => ['sometimes','required'],
+            'description' => ['sometimes','required'],
+            'short_description' => ['sometimes','required'],
+            'price' => ['sometimes','required', 'numeric'],
+            'status' => ['sometimes', 'required', Rule::in(['draft', 'pending', 'approved', 'rejected', 'inactive'])],
+            'thumbnail' => ['sometimes','required', 'url'],
+            'quantity' => ['sometimes','numeric'],
+            'images' => ['sometimes','required', 'array'],
+            'images.*' => ['sometimes','string', 'url'], // Validates each item in the array is an url
+            'category_id' => ['sometimes','required', 'exists:categories,id']
         ]);
 
         $product->update($data);

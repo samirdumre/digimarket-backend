@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -13,7 +14,6 @@ Route::post('signup', [AuthController::class, 'signup']);
 Route::post('signin', [AuthController::class, 'signin']);
 
 Route::get('/auth/verify-email/{id}/{hash}', function ($id, $hash, Request $request){
-
     // Find user by id
     $user = User::find($id);
 
@@ -61,5 +61,6 @@ Route::middleware('auth:api', 'verified')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::apiResource('books', BookController::class);
         Route::apiResource('products', ProductController::class);
+        Route::apiResource('categories', CategoryController::class);
     });
 });
