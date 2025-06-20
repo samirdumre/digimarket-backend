@@ -45,7 +45,6 @@ class ProductController extends BaseController
         $product = Product::create($dataToCreate);
 
         return $this->sendResponse(new ProductResource($product), 'Product created successfully');
-
     }
 
     public function show(Product $product)
