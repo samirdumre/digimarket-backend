@@ -56,4 +56,9 @@ use Laravel\Passport\HasApiTokens;
         return $this->hasMany(Product::class);
     }
 
+    public function cartItem(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
 }
