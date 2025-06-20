@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('signup', [AuthController::class, 'signup']);
 Route::post('signin', [AuthController::class, 'signin']);
 
-
 Route::get('/auth/verify-email/{id}/{hash}', function ($id, $hash, Request $request){
     // Find user by id
     $user = User::find($id);
@@ -51,7 +50,15 @@ Route::post('/auth/resend-verification', function (Request $request){
 Route::middleware('auth:api', 'verified')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::prefix('/v1')->group(function () {
-        Route::apiResource('users', UserController::class);
-        Route::apiResource('products', ProductController::class);
+
+        Route::group(['middleware' => ['role:admin']], function (){
+            Route::apiResource('users', UserController::class);
+            Route::apiResource('products', ProductController::class);
+        });
+
+        Route::group(['middleware' => ['role:user']], function (){
+            Route::apiResource('users', UserController::class)->except('destroy');
+            Route::apiResource('products', ProductController::class);
+        });
     });
 });

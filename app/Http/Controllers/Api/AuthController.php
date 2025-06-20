@@ -22,13 +22,15 @@ class AuthController extends BaseController
 
         if($validator->fails())
         {
-
             return $this->sendError('Validation Error', $validator->errors());
         }
 
         $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
 
+        // Assign role to new user
+        $user->assignRole('user');
 
         $success = [
             'token' => $user->createToken('DigiMarket')->accessToken,
