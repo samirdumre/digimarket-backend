@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -53,26 +51,7 @@ Route::post('/auth/resend-verification', function (Request $request){
 Route::middleware('auth:api', 'verified')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::prefix('/v1')->group(function () {
-
-        // Super admin routes
-        Route::prefix('admin')->middleware('role:super-admin')->group(function (){
-            Route::apiResource('users', UserController::class);
-            Route::apiResource('products', ProductController::class);
-            Route::apiResource('categories', CategoryController::class);
-        });
-
-        // Admin routes
-        Route::middleware('role:admin')->group(function (){
-            Route::apiResource('users', UserController::class)->except('destroy');
-            Route::apiResource('products', ProductController::class);
-            Route::apiResource('categories', CategoryController::class)->except('destroy');
-        });
-
-        // User routes
-        Route::middleware('role:user')->group(function (){
-            Route::apiResource('users', UserController::class)->except('destroy', 'show');
-            Route::apiResource('products', ProductController::class);
-            Route::apiResource('categories', CategoryController::class)->except('update', 'destroy', 'store');
-        });
+        Route::apiResource('users', UserController::class);
+        Route::apiResource('products', ProductController::class);
     });
 });

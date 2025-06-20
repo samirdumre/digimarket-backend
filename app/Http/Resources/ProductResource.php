@@ -21,10 +21,7 @@ class ProductResource extends JsonResource
             'download_count' => $this->download_count,
             'quantity' => $this->quantity,
             'thumbnail' => $this->thumbnail,
-            'images' => $this->images,
-            'category' => new Category($this)
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'images' => $this->images
         ];
     }
 }

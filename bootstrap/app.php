@@ -1,14 +1,9 @@
 <?php
 
-use App\Http\Middleware\CheckRolePermissionMiddleware;
-use App\Http\Middleware\CheckScopeAndRoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Laravel\Passport\Http\Middleware\CheckTokenForAnyScope;
-use Spatie\Permission\Middleware\PermissionMiddleware;
-use Spatie\Permission\Middleware\RoleMiddleware;
-use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,14 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
-            'role' => RoleMiddleware::class,
-            'permission' => PermissionMiddleware::class,
-            'role_or_permission' => RoleOrPermissionMiddleware::class,
-            'check.role.permission' => CheckRolePermissionMiddleware::class,
-            'scope.role' => CheckScopeAndRoleMiddleware::class,
-            'scope' => CheckTokenForAnyScope::class,
-        ]);
+        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
