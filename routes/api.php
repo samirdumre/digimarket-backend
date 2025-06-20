@@ -13,32 +13,28 @@ use Illuminate\Support\Facades\Route;
 Route::post('signup', [AuthController::class, 'signup']);
 Route::post('signin', [AuthController::class, 'signin']);
 
+
 Route::get('/auth/verify-email/{id}/{hash}', function ($id, $hash, Request $request){
     // Find user by id
     $user = User::find($id);
-
     if(!$user) {
         return response()->json([
             'message' => 'User not found'
         ], 404);
     }
-
     // Verify if the hash is correct
     if(!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
         return response()->json(['message' => 'Invalid verification link'], 403);
     }
-
     // Mark email as verified
     if(!$user->hasVerifiedEmail()){
         $user->markEmailAsVerified();
     }
-
-//    return response()->json(['message' => 'Email verified successfully!']);
-
     // Redirect to frontend
     return redirect('http://localhost:3000/products/?email_verified=true');
 
 })->middleware('signed')->name('verification.verify');
+
 
 Route::post('/auth/resend-verification', function (Request $request){
     $user = User::where('email', $request->email)->first();
@@ -46,21 +42,37 @@ Route::post('/auth/resend-verification', function (Request $request){
     if (!$user) {
         return response()->json(['message' => 'User not found'], 404);
     }
-
     if($user->hasVerifiedEmail()){
         return response()->json(['message' => 'Email already verified'], 400);
     }
-
     $user->sendEmailVerificationNotification();
     return response()->json(['message' => 'Verification link resent!']);
 });
 
+
 Route::middleware('auth:api', 'verified')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::prefix('/v1')->group(function () {
-        Route::apiResource('users', UserController::class);
-        Route::apiResource('books', BookController::class);
-        Route::apiResource('products', ProductController::class);
-        Route::apiResource('categories', CategoryController::class);
+
+        // Super admin routes
+        Route::prefix('admin')->middleware('role:super-admin')->group(function (){
+            Route::apiResource('users', UserController::class);
+            Route::apiResource('products', ProductController::class);
+            Route::apiResource('categories', CategoryController::class);
+        });
+
+        // Admin routes
+        Route::middleware('role:admin')->group(function (){
+            Route::apiResource('users', UserController::class)->except('destroy');
+            Route::apiResource('products', ProductController::class);
+            Route::apiResource('categories', CategoryController::class)->except('destroy');
+        });
+
+        // User routes
+        Route::middleware('role:user')->group(function (){
+            Route::apiResource('users', UserController::class)->except('destroy', 'show');
+            Route::apiResource('products', ProductController::class);
+            Route::apiResource('categories', CategoryController::class)->except('update', 'destroy', 'store');
+        });
     });
 });

@@ -11,6 +11,25 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseController
 {
+    private function generateScopesFromRoles(User $user)
+    {
+        $scopes = [];
+
+        if($user->hasRole('super-admin')){
+            $scopes[] = 'super-admin';
+        }
+
+        if($user->hasRole('admin')){
+            $scopes[] = 'admin';
+        }
+
+        if($user->hasRole('user')){
+            $scopes[] = 'user';
+        }
+
+        return $scopes;
+    }
+
     public function signup(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,8 +65,14 @@ class AuthController extends BaseController
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
 
+            // Generate scopes based on user roles
+            $scopes = $this->generateScopesFromRoles($user);
+
+            // Create token with Role based scopes
+            $token = $user->createToken('DigiMarket', $scopes)->accessToken;
+
             $success = [
-                'token' => $user->createToken('DigiMarket')->accessToken,
+                'token' => $token,
                 'name' => $user->name,
             ];
 
