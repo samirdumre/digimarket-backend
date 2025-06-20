@@ -51,12 +51,12 @@ use Laravel\Passport\HasApiTokens;
         ];
     }
 
-    public function product(): HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    public function cartItem(): HasMany
+    public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class);
     }
