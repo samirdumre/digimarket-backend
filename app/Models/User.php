@@ -66,4 +66,9 @@ use Laravel\Passport\HasApiTokens;
         return $this->hasMany(Order::class);
     }
 
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItems::class);
+    }
+
 }
