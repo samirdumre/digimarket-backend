@@ -10,12 +10,12 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id');
-            $table->string('title');
-            $table->string('short_description');
-            $table->string('description');
+            $table->text('title');
+            $table->text('short_description');
+            $table->fullText('description');
             $table->decimal('price');
             $table->integer('quantity');
-            $table->string('thumbnail');
+            $table->text('thumbnail');
             $table->json('images');
             $table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'inactive']);
             $table->integer('download_count');

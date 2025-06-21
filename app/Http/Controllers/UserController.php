@@ -47,6 +47,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+
     /**
      * Update the specified user.
      */
@@ -59,7 +60,7 @@ class UserController extends Controller
         ]);
 
         $updateData = $request->only(['name', 'email']);
-        
+
         if ($request->has('password')) {
             $updateData['password'] = Hash::make($request->password);
         }
@@ -76,5 +77,17 @@ class UserController extends Controller
     {
         $user->delete();
         return response()->json(['message' => 'User deleted successfully']);
+    }
+
+    public function makeAdmin(User $user)
+    {
+        $user->assignRole('admin');
+        return response()->json(['message' => 'User is now admin']);
+    }
+
+    public function isAdmin(User $user)
+    {
+        $role = $user->hasRole('admin');
+        return response()->json($role);
     }
 }
