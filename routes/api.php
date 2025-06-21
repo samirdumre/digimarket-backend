@@ -55,20 +55,20 @@ Route::prefix('/v1')->group(function () {
     Route::middleware('auth:api', 'verified')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
 
+        // ADMIN ONLY ROUTES
         Route::group(['middleware' => ['role:admin']], function () {
+            Route::post('users/{user}/make-admin', [UserController::class, 'makeAdmin']);
             Route::apiResource('users', UserController::class);
+        });
+
+        // USER AND ADMIN ROUTES (both can access)
+        Route::group(['middleware' => ['role:user|admin']], function () {
+            Route::get('is-admin', [UserController::class, 'isAdmin']);
+            Route::apiResource('orders', OrderController::class);
+            Route::apiResource('order-items', OrderItemsController::class);
             Route::apiResource('products', ProductController::class);
             Route::apiResource('cart-items', CartItemController::class);
             Route::apiResource('categories', CategoryController::class);
-            Route::apiResource('orders', OrderController::class);
-            Route::apiResource('order-items', OrderItemsController::class);
-        });
-
-        Route::group(['middleware' => ['role:user']], function () {
-            Route::apiResource('users', UserController::class)->except('destroy');
-            Route::post('/users/{user}/make-admin', [UserController::class, 'makeAdmin']);
-            Route::get('/users/{user}/is-admin', [UserController::class, 'isAdmin']);
-            Route::apiResource('products', ProductController::class);
         });
     });
 });

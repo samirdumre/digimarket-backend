@@ -17,6 +17,9 @@ use Laravel\Passport\HasApiTokens;
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
+     // Set default guard for this model
+     protected $guard_name = 'api';
+
     /**
      * The attributes that are mass assignable.
      *

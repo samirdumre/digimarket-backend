@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -35,6 +35,8 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $user->assignRole('user');
 
         return response()->json($user, 201);
     }
@@ -79,15 +81,18 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted successfully']);
     }
 
-    public function makeAdmin(User $user)
+    public function isAdmin()
     {
-        $user->assignRole('admin');
-        return response()->json(['message' => 'User is now admin']);
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $isAdmin = $user->hasRole('admin');
+        return response()->json($isAdmin);
     }
 
-    public function isAdmin(User $user)
+    public function makeAdmin(User $user)
     {
-        $role = $user->hasRole('admin');
-        return response()->json($role);
+        $user->syncRoles();
+        $user->assignRole('admin');
+
+        return response()->json(['message' => 'User is now an admin']);
     }
 }

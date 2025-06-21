@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignId('category_id');
             $table->text('title');
             $table->text('short_description');
-            $table->fullText('description');
+            $table->text('description');
             $table->decimal('price');
             $table->integer('quantity');
             $table->text('thumbnail');

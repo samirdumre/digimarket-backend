@@ -18,8 +18,6 @@ return new class extends Migration {
             $table->decimal('price');
             $table->string('product_title');
             $table->string('download_url');
-            $table->string('download_count');
-            $table->string('max_downloads');
             $table->timestamps();
         });
     }

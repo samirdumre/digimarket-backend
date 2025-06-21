@@ -14,8 +14,6 @@ class OrderItems extends Model
         'price',
         'product_title',
         'download_url',
-        'download_count',
-        'max_downloads',
     ];
 
     public function order(): BelongsTo

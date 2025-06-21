@@ -29,7 +29,6 @@ class AuthController extends BaseController
         $input['password'] = Hash::make($input['password']);
         $user = User::create($input);
 
-        // Assign role to new user
         $user->assignRole('user');
 
         $success = [
@@ -63,7 +62,7 @@ class AuthController extends BaseController
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        $request->user()->tokens()->delete();
         return response()->json(['message' => 'Successfully logged out']);
     }
 }

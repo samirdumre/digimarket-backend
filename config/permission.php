@@ -25,7 +25,6 @@ return [
          */
 
         'role' => Spatie\Permission\Models\Role::class,
-
     ],
 
     'table_names' => [
@@ -198,5 +197,9 @@ return [
          */
 
         'store' => 'default',
+    ],
+    'defaults' => [
+        'guard' => 'api',
+        'passwords' => 'users',
     ],
 ];

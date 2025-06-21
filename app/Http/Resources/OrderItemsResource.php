@@ -16,8 +16,6 @@ class OrderItemsResource extends JsonResource
             'price' => $this->price,
             'product_title' => $this->product_title,
             'download_url' => $this->download_url,
-            'download_count' => $this->download_count,
-            'max_downloads' => $this->max_downloads,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 

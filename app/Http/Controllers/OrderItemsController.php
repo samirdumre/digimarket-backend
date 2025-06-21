@@ -20,10 +20,8 @@ class OrderItemsController extends Controller
             'product_id' => ['required', 'exists:products,id'],
             'seller_id' => ['required', 'exists:users,id'],
             'price' => ['required', 'numeric'],
-            'product_title' => ['required'],
             'download_url' => ['required'],
-            'download_count' => ['required'],
-            'max_downloads' => ['required'],
+            'product_title' => ['required'],
         ]);
 
         return new OrderItemsResource(OrderItems::create($data));
@@ -43,8 +41,6 @@ class OrderItemsController extends Controller
             'price' => ['required', 'numeric'],
             'product_title' => ['required'],
             'download_url' => ['required'],
-            'download_count' => ['required'],
-            'max_downloads' => ['required'],
         ]);
 
         $orderItems->update($data);
