@@ -16,8 +16,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'buyer_id' => ['required', 'exists:users'],
-            'order_number' => ['required'],
+            'buyer_id' => ['required', 'exists:users,id'],
             'total_amount' => ['required', 'numeric'],
             'status' => ['required'],
             'payment_status' => ['required'],
@@ -26,6 +25,8 @@ class OrderController extends Controller
             'billing_name' => ['required'],
             'billing_address' => ['required'],
         ]);
+
+        $data['order_number'] = uuid_create();
 
         return new OrderResource(Order::create($data));
     }
@@ -38,8 +39,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $data = $request->validate([
-            'buyer_id' => ['required', 'exists:users'],
-            'order_number' => ['required'],
+            'buyer_id' => ['required', 'exists:users,id'],
             'total_amount' => ['required', 'numeric'],
             'status' => ['required'],
             'payment_status' => ['required'],

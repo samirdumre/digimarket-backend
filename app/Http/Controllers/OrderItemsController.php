@@ -16,9 +16,9 @@ class OrderItemsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'order_id' => ['required', 'exists:orders'],
-            'product_id' => ['required', 'exists:products'],
-            'seller_id' => ['required', 'exists:users'],
+            'order_id' => ['required', 'exists:orders,id'],
+            'product_id' => ['required', 'exists:products,id'],
+            'seller_id' => ['required', 'exists:users,id'],
             'price' => ['required', 'numeric'],
             'product_title' => ['required'],
             'download_url' => ['required'],
@@ -37,9 +37,9 @@ class OrderItemsController extends Controller
     public function update(Request $request, OrderItems $orderItems)
     {
         $data = $request->validate([
-            'order_id' => ['required', 'exists:orders'],
-            'product_id' => ['required', 'exists:products'],
-            'seller_id' => ['required', 'exists:users'],
+            'order_id' => ['required', 'exists:orders,id'],
+            'product_id' => ['required', 'exists:products,id'],
+            'seller_id' => ['required', 'exists:users,id'],
             'price' => ['required', 'numeric'],
             'product_title' => ['required'],
             'download_url' => ['required'],
