@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     protected $fillable = [
-        'title', 'description', 'short_description', 'price', 'status', 'quantity','download_count', 'thumbnail', 'images', 'category_id'
+        'title', 'description', 'short_description', 'price', 'status', 'quantity','download_count', 'thumbnail', 'images', 'category_id', 'seller_id'
     ];
 
     protected $casts = [
@@ -21,9 +21,9 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function user(): BelongsTo
+    public function seller(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'seller_id');
     }
 
     public function cartItems(): HasMany

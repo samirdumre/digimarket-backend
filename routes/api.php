@@ -64,6 +64,7 @@ Route::prefix('/v1')->group(function () {
         // USER AND ADMIN ROUTES (both can access)
         Route::group(['middleware' => ['role:user|admin']], function () {
             Route::get('is-admin', [UserController::class, 'isAdmin']);
+            Route::get('user-products', [ProductController::class, 'userProducts']);
             Route::apiResource('orders', OrderController::class);
             Route::apiResource('order-items', OrderItemsController::class);
             Route::apiResource('products', ProductController::class);

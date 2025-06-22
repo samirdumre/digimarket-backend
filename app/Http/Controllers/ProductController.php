@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -31,7 +32,8 @@ class ProductController extends BaseController
             'quantity' => ['numeric'],
             'images' => ['required', 'array'], // Validates the images is an array
             'images.*' => ['string', 'url'], // Validates each item in the array is a url
-            'category_id' => ['required', 'exists:categories,id']
+            'category_id' => ['required', 'exists:categories,id'],
+            'seller_id' => ['required', 'exists:users,id']
         ]);
 
         if($validator->fails()){
@@ -77,5 +79,12 @@ class ProductController extends BaseController
         $product->delete();
 
         return $this->sendResponse([], 'Product deleted successfully');
+    }
+
+    public function userProducts()
+    {
+        $user = Auth::user();
+        $products= $user->products()->with('category')->get();
+        return response()->json(ProductResource::collection($products));
     }
 }
