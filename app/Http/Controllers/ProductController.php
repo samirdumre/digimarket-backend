@@ -14,7 +14,7 @@ class ProductController extends BaseController
 {
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->orderBy('id', 'asc')->get();
         return $this->sendResponse(ProductResource::collection($products), 'Products retrived successfully');
     }
 
@@ -32,16 +32,18 @@ class ProductController extends BaseController
             'quantity' => ['numeric'],
             'images' => ['required', 'array'], // Validates the images is an array
             'images.*' => ['string', 'url'], // Validates each item in the array is a url
-            'category_id' => ['required', 'exists:categories,id'],
-            'seller_id' => ['required', 'exists:users,id']
+            'category_id' => ['required', 'exists:categories,id']
         ]);
 
         if($validator->fails()){
             return $this->sendError('Validation error', $validator->errors());
         }
 
+        $user = Auth::user();
+
         $dataToCreate = array_merge([
             'download_count' => 0,
+            'seller_id' => $user->id
         ], $validator->validated());
 
         $product = Product::create($dataToCreate);
@@ -69,6 +71,12 @@ class ProductController extends BaseController
             'category_id' => ['sometimes','required', 'exists:categories,id']
         ]);
 
+        $user = Auth::user();
+
+        if(!$user->id === $product->seller_id){
+            return $this->sendError("You can only modify your products");
+        }
+
         $product->update($data);
 
         return $this->sendResponse(new ProductResource($product), 'Product updated successfully');
@@ -84,7 +92,7 @@ class ProductController extends BaseController
     public function userProducts()
     {
         $user = Auth::user();
-        $products= $user->products()->with('category')->get();
+        $products= $user->products()->with('category')->orderBy('id', 'asc')->get();
         return response()->json(ProductResource::collection($products));
     }
 }
