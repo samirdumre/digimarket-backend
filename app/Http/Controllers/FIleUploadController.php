@@ -20,10 +20,10 @@ class FIleUploadController extends Controller
 
         $file = $request->file('file');
 
-        // Store the file in public/uploads
+        // Store the file in storage/app/public/uploads
         $path = $file->store('uploads', 'public');
 
-        // Get the URL
+        // Get the URL using Laravel's Storage facade
         $url = Storage::url($path);
 
         return response()->json(['url' => $url]);
