@@ -32,7 +32,9 @@ class ProductController extends BaseController
             'quantity' => ['numeric'],
             'images' => ['required', 'array'], // Validates the images is an array
             'images.*' => ['string', 'url'], // Validates each item in the array is a url
-            'category_id' => ['required', 'exists:categories,id']
+            'category_id' => ['required', 'exists:categories,id'],
+            'file_url' => ['required'],
+            'file_name' => ['required']
         ]);
 
         if($validator->fails()){
@@ -68,7 +70,9 @@ class ProductController extends BaseController
             'quantity' => ['sometimes','numeric'],
             'images' => ['sometimes','required', 'array'],
             'images.*' => ['sometimes','string', 'url'], // Validates each item in the array is an url
-            'category_id' => ['sometimes','required', 'exists:categories,id']
+            'category_id' => ['sometimes','required', 'exists:categories,id'],
+            'file_url' => ['sometimes', 'required', 'url'],
+            'file_name' => ['sometimes']
         ]);
 
         $user = Auth::user();

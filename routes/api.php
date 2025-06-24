@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FIleUploadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemsController;
 use App\Http\Controllers\ProductController;
@@ -65,6 +66,7 @@ Route::prefix('/v1')->group(function () {
         Route::group(['middleware' => ['role:user|admin']], function () {
             Route::get('is-admin', [UserController::class, 'isAdmin']);
             Route::get('user-products', [ProductController::class, 'userProducts']);
+            Route::post('file-upload', [FIleUploadController::class, 'uploadFile']);
             Route::apiResource('orders', OrderController::class);
             Route::apiResource('order-items', OrderItemsController::class);
             Route::apiResource('products', ProductController::class);

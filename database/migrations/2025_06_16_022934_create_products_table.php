@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->integer('quantity');
             $table->text('thumbnail');
             $table->json('images');
+            $table->text('file_url');
+            $table->text('file_name');
             $table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'inactive']);
             $table->integer('download_count');
             $table->timestamps();

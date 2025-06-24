@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     protected $fillable = [
-        'title', 'description', 'short_description', 'price', 'status', 'quantity','download_count', 'thumbnail', 'images', 'category_id', 'seller_id'
+        'title', 'description', 'short_description', 'price', 'status', 'quantity','download_count', 'thumbnail', 'images', 'category_id', 'seller_id', 'file_url', 'file_name'
     ];
 
     protected $casts = [
