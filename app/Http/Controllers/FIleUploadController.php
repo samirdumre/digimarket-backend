@@ -18,13 +18,14 @@ class FIleUploadController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+
         $file = $request->file('file');
 
         // Store the file in storage/app/public/uploads
         $path = $file->store('uploads', 'public');
 
-        // Get the URL using Laravel's Storage facade
-        $url = Storage::url($path);
+        // Get the full URL of the file
+        $url = asset('storage/' . $path);
 
         return response()->json(['url' => $url]);
     }

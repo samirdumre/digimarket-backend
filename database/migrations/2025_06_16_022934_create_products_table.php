@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->text('title');
             $table->text('short_description');
             $table->text('description');
-            $table->decimal('price');
+            $table->decimal('price', 8, 2);
             $table->integer('quantity');
             $table->text('thumbnail');
             $table->json('images');

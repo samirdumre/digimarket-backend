@@ -33,8 +33,8 @@ class ProductController extends BaseController
             'images' => ['required', 'array'], // Validates the images is an array
             'images.*' => ['string', 'url'], // Validates each item in the array is a url
             'category_id' => ['required', 'exists:categories,id'],
-            'file_url' => ['required'],
-            'file_name' => ['required']
+            'file_url' => ['sometimes','required'],
+            'file_name' => ['sometimes','required']
         ]);
 
         if($validator->fails()){
@@ -60,26 +60,25 @@ class ProductController extends BaseController
 
     public function update(Request $request, Product $product)
     {
-        $data = $request->validate([
-            'title' => ['sometimes','required'],
-            'description' => ['sometimes','required'],
-            'short_description' => ['sometimes','required'],
-            'price' => ['sometimes','required', 'numeric'],
-            'status' => ['sometimes', 'required', Rule::in(['draft', 'pending', 'approved', 'rejected', 'inactive'])],
-            'thumbnail' => ['sometimes','required', 'url'],
-            'quantity' => ['sometimes','numeric'],
-            'images' => ['sometimes','required', 'array'],
-            'images.*' => ['sometimes','string', 'url'], // Validates each item in the array is an url
-            'category_id' => ['sometimes','required', 'exists:categories,id'],
-            'file_url' => ['sometimes', 'required', 'url'],
-            'file_name' => ['sometimes']
-        ]);
-
         $user = Auth::user();
-
-        if(!$user->id === $product->seller_id){
+        if($user->id !== $product->seller_id){
             return $this->sendError("You can only modify your products");
         }
+
+        $data = $request->validate([
+            'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'required', 'string'],
+            'short_description' => ['sometimes', 'required', 'string', 'max:500'],
+            'price' => ['sometimes', 'required', 'numeric', 'min:0'],
+            'status' => ['sometimes', 'required', Rule::in(['draft', 'pending', 'approved', 'rejected', 'inactive'])],
+            'thumbnail' => ['sometimes', 'required', 'url'],
+            'quantity' => ['sometimes', 'numeric', 'min:0'],
+            'images' => ['sometimes', 'required', 'array'],
+            'images.*' => ['string', 'url'],
+            'category_id' => ['sometimes', 'required', 'exists:categories,id'],
+            'file_url' => ['sometimes', 'nullable', 'url'],
+            'file_name' => ['sometimes', 'nullable', 'string']
+        ]);
 
         $product->update($data);
 
