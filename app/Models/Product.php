@@ -14,6 +14,7 @@ class Product extends Model
 
     protected $casts = [
         'images' => 'array', // Casts the JSON column to an array
+        'price' => 'decimal:2',
     ];
 
     public function category(): BelongsTo

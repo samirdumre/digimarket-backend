@@ -25,7 +25,8 @@ class ProductResource extends JsonResource
             'thumbnail' => $this->thumbnail,
             'images' => $this->images,
             'file_url' => $this->file_url,
-            'file_name' => $this->file_name
+            'file_name' => $this->file_name,
+            'updated_at' => $this->updated_at
         ];
     }
 }
