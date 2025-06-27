@@ -12,7 +12,6 @@ class Order extends Model
         'buyer_id',
         'order_number',
         'total_amount',
-
         'status',
         'payment_status',
         'payment_method',

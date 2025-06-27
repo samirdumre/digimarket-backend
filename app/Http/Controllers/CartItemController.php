@@ -46,23 +46,29 @@ class CartItemController extends Controller
         return new CartItemResource($cartItem);
     }
 
-//    public function update(Request $request, CartItem $cartItem)
-//    {
-//        $data = $request->validate([
-//            'user_id' => ['required', 'exists:users'],
-//            'product_id' => ['required', 'exists:products'],
-//            'quantity' => ['required', 'integer'],
-//        ]);
-//
-//        $cartItem->update($data);
-//
-//        return new CartItemResource($cartItem);
-//    }
 
     public function destroy(CartItem $cartItem)
     {
         $cartItem->delete();
 
         return response()->json();
+    }
+
+    public function getUserCart()
+    {
+        $user = Auth::user();
+        $cartItems = $user->cartItems;
+        return CartItemResource::collection($cartItems);
+    }
+
+    public function destroyAll()
+    {
+        $user = Auth::user();
+        $deletedCount = $user->cartItems()->delete();
+
+        return response()->json([
+            'message' => 'All cart items deleted',
+            'deleted_count' => $deletedCount
+        ], 200);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -15,18 +16,20 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $data = $request->validate([
-            'buyer_id' => ['required', 'exists:users,id'],
             'total_amount' => ['required', 'numeric'],
             'status' => ['required'],
             'payment_status' => ['required'],
             'payment_method' => ['required'],
-            'billing_email' => ['required', 'email', 'max:254'],
             'billing_name' => ['required'],
             'billing_address' => ['required'],
         ]);
 
         $data['order_number'] = uuid_create();
+        $data['buyer_id'] = $user->id;
+        $data['billing_email'] = $user->email;
 
         return new OrderResource(Order::create($data));
     }

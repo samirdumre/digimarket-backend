@@ -98,4 +98,19 @@ class ProductController extends BaseController
         $products= $user->products()->with('category')->orderBy('id', 'asc')->get();
         return response()->json(ProductResource::collection($products));
     }
+
+    public function getProductsFromCart()
+    {
+        $user = Auth::user();
+        $cartItems = $user->cartItems()->with('product.category')->get();
+
+        $products = $cartItems->map(function ($cartItem){
+            return [
+                'cart_item_id' => $cartItem->id,
+                'quantity' => $cartItem->quantity,
+                'product' => new ProductResource($cartItem->product)
+            ];
+        });
+        return $this->sendResponse($products, 'Cart products retrieved successfully');
+    }
 }
