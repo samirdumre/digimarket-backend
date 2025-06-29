@@ -31,7 +31,26 @@ class OrderController extends Controller
         $data['buyer_id'] = $user->id;
         $data['billing_email'] = $user->email;
 
-        return new OrderResource(Order::create($data));
+        // Create the order
+        $order = Order::create($data);
+
+        // Get the user's cart items
+        $cartItems = $user->cartItems()->with('product')->get();
+
+        // Create order items
+        foreach ($cartItems as $cartItem){
+            $order->orderItems()->create([
+                'order_id' => $order->id,
+                'product_id' => $cartItem->product_id,
+                'seller_id' => $cartItem->product->seller_id,
+                'quantity' => $cartItem->quantity,
+                'price' => $cartItem->product->price,
+                'product_title' => $cartItem->product->title,
+                'download_url' => $cartItem->product->file_url
+            ]);
+        }
+
+        return new OrderResource($order->load('orderItems'));
     }
 
     public function show(Order $order)

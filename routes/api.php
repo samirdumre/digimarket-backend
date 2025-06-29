@@ -65,11 +65,13 @@ Route::prefix('/v1')->group(function () {
         // USER AND ADMIN ROUTES (both can access)
         Route::group(['middleware' => ['role:user|admin']], function () {
             Route::get('is-admin', [UserController::class, 'isAdmin']);
+            Route::get('get-user-info', [UserController::class, 'getUserInfo']);
             Route::get('user-products', [ProductController::class, 'userProducts']);
             Route::post('file-upload', [FIleUploadController::class, 'uploadFile']);
             Route::get('get-user-cart', [CartItemController::class, 'getUserCart']);
             Route::get('get-cart-products', [ProductController::class, 'getProductsFromCart']);
             Route::post('remove-all-cart-items', [CartItemController::class, 'destroyAll']);
+            Route::get('get-purchased-items', [OrderItemsController::class, 'getPurchasedItems']);
             Route::apiResource('orders', OrderController::class);
             Route::apiResource('order-items', OrderItemsController::class);
             Route::apiResource('products', ProductController::class);

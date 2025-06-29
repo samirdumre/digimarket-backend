@@ -95,4 +95,10 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User is now an admin']);
     }
+
+    public function getUserInfo()
+    {
+        $user = Auth::user();
+        return response()->json($user);
+    }
 }

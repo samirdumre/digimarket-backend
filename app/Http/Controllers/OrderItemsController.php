@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrderItemsResource;
 use App\Models\OrderItems;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderItemsController extends Controller
 {
@@ -53,5 +54,12 @@ class OrderItemsController extends Controller
         $orderItems->delete();
 
         return response()->json();
+    }
+
+    public function getPurchasedItems()
+    {
+        $user = Auth::user();
+        $orderItems = $user->orderItems;
+        return new OrderItemsResource($orderItems);
     }
 }

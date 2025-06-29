@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignIdFor(Order::class);
             $table->foreignIdFor(Product::class);
             $table->foreignIdFor(User::class, 'seller_id');
+            $table->integer('quantity')->default(1);
             $table->decimal('price');
             $table->string('product_title');
             $table->string('download_url');
