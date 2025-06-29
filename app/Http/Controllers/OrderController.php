@@ -48,6 +48,9 @@ class OrderController extends Controller
             ]);
         }
 
+        // Clear the user's cart after creating order and order_items
+        $user->cartItem()->delete();
+
         return new OrderResource($order->load('orderItems'));
     }
 

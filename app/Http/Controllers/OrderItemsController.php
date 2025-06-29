@@ -59,7 +59,9 @@ class OrderItemsController extends Controller
     public function getPurchasedItems()
     {
         $user = Auth::user();
-        $orderItems = $user->orderItems;
+        $orderItems = OrderItems::whereHas('order', function($query) use ($user) {
+            $query->where('buyer_id', $user->id);
+        })->get();
         return OrderItemsResource::collection($orderItems);
     }
 }
