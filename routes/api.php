@@ -69,9 +69,9 @@ Route::prefix('/v1')->group(function () {
             Route::get('user-products', [ProductController::class, 'userProducts']);
             Route::post('file-upload', [FIleUploadController::class, 'uploadFile']);
             Route::get('get-user-cart', [CartItemController::class, 'getUserCart']);
+            Route::get('get-purchased-items', [OrderItemsController::class, 'getPurchasedItems']);
             Route::get('get-cart-products', [ProductController::class, 'getProductsFromCart']);
             Route::post('remove-all-cart-items', [CartItemController::class, 'destroyAll']);
-            Route::get('get-purchased-items', [OrderItemsController::class, 'getPurchasedItems']);
             Route::apiResource('orders', OrderController::class);
             Route::apiResource('order-items', OrderItemsController::class);
             Route::apiResource('products', ProductController::class);

@@ -60,6 +60,6 @@ class OrderItemsController extends Controller
     {
         $user = Auth::user();
         $orderItems = $user->orderItems;
-        return new OrderItemsResource($orderItems);
+        return OrderItemsResource::collection($orderItems);
     }
 }

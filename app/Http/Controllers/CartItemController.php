@@ -25,7 +25,7 @@ class CartItemController extends Controller
         ]);
 
         // Check if the product already exists in the user's cart
-        $existingCartItem = $user->cartItems()->where('product_id', $data['product_id'])->first();
+        $existingCartItem = $user->cartItem()->where('product_id', $data['product_id'])->first();
 
         if($existingCartItem){
             // Increase product quantity if it exists
@@ -64,7 +64,7 @@ class CartItemController extends Controller
     public function destroyAll()
     {
         $user = Auth::user();
-        $deletedCount = $user->cartItems()->delete();
+        $deletedCount = $user->cartItem()->delete();
 
         return response()->json([
             'message' => 'All cart items deleted',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\OrderItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -102,7 +103,7 @@ class ProductController extends BaseController
     public function getProductsFromCart()
     {
         $user = Auth::user();
-        $cartItems = $user->cartItems()->with('product.category')->get();
+        $cartItems = $user->cartItem()->with('product.category')->get();
 
         $products = $cartItems->map(function ($cartItem){
             return [
