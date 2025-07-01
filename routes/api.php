@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\FIleUploadController;
+use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemsController;
 use App\Http\Controllers\ProductController;
@@ -35,7 +35,7 @@ Route::prefix('/v1')->group(function () {
             $user->markEmailAsVerified();
         }
         // Redirect to frontend
-        return redirect('http://localhost:3000/products/?email_verified=true');
+        return redirect(config('app.frontend_url') . '/products/?email_verified=true');
     })->middleware('signed')->name('verification.verify');
 
 
@@ -67,7 +67,7 @@ Route::prefix('/v1')->group(function () {
             Route::get('is-admin', [UserController::class, 'isAdmin']);
             Route::get('get-user-info', [UserController::class, 'getUserInfo']);
             Route::get('user-products', [ProductController::class, 'userProducts']);
-            Route::post('file-upload', [FIleUploadController::class, 'uploadFile']);
+            Route::post('file-upload', [FileUploadController::class, 'uploadFile']);
             Route::get('get-user-cart', [CartItemController::class, 'getUserCart']);
             Route::get('get-purchased-items', [OrderItemsController::class, 'getPurchasedItems']);
             Route::get('get-cart-products', [ProductController::class, 'getProductsFromCart']);

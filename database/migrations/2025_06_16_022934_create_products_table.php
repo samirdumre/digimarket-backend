@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->text('file_url');
             $table->text('file_name');
             $table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'inactive']);
-            $table->integer('download_count');
+            $table->integer('download_count')->default(0);
             $table->timestamps();
         });
     }

@@ -1,0 +1,54 @@
+services:
+  app:
+    build: .
+    image: digimarket-app:latest
+    container_name: digimarket-app
+    env_file: .env.production
+    environment:
+      WWWUSER: "1000"
+      WWWGROUP: "1000"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: digimarket
+      DB_USERNAME: postgres
+      DB_PASSWORD: idkpassword
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: http://192.176.172.153:8000
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - storage-data:/var/www/html/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - digimarket-net
+
+  postgres:
+    image: postgres:17
+    container_name: digimarket-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: digimarket
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: idkpassword
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d digimarket"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digimarket-net
+
+volumes:
+  pg-data:
+  storage-data:
+
+networks:
+  digimarket-net:
+    external: true
