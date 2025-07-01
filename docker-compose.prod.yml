@@ -1,44 +1,35 @@
 services:
   app:
-    build: .
-    image: digimarket-app:latest
-    container_name: digimarket-app
-    env_file: .env.production
-    environment:
-      WWWUSER: "1000"
-      WWWGROUP: "1000"
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: digimarket
-      DB_USERNAME: postgres
-      DB_PASSWORD: idkpassword
-      APP_ENV: production
-      APP_DEBUG: false
-      APP_URL: http://192.176.172.153:8000
+    image: digimarket-backend:latest
+    container_name: digimarket_app
     restart: unless-stopped
     ports:
-      - "8000:80"
-    volumes:
-      - storage-data:/var/www/html/storage
+      - "80:80"
+    environment:
+      - APP_ENV=production
+    env_file:
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - storage_data:/var/www/html/storage/app
+      - logs_data:/var/www/html/storage/logs
     networks:
       - digimarket-net
 
   postgres:
-    image: postgres:17
-    container_name: digimarket-postgres
+    image: postgres:17-alpine
+    container_name: digimarket_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: digimarket
-      POSTGRES_USER: postgres
+      POSTGRES_DB: digimarket_backend_v2
+      POSTGRES_USER: sail
       POSTGRES_PASSWORD: idkpassword
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d digimarket"]
+      test: ["CMD-SHELL", "pg_isready -U sail -d digimarket_backend_v2"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,8 +37,9 @@ services:
       - digimarket-net
 
 volumes:
-  pg-data:
-  storage-data:
+  postgres_data:
+  storage_data:
+  logs_data:
 
 networks:
   digimarket-net:
