@@ -1,8 +1,5 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: samirdumre/digimarket-backend:latest
     container_name: digimarket_app
     restart: unless-stopped
